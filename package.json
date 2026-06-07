@@ -13,7 +13,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "SECURITY.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -38,5 +39,13 @@
   "devDependencies": {
     "@types/node": "^25.9.1",
     "typescript": "^6.0.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/logtriage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/logtriage/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/logtriage#readme"
 }
