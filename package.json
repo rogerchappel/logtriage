@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "Local-first CLI for turning noisy command logs into concise triage reports.",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/src/index.js",
   "bin": {
-    "logtriage": "./dist/cli.js"
+    "logtriage": "./dist/src/cli.js"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/src/index.js"
   },
   "files": [
     "dist",
