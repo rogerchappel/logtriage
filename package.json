@@ -3,17 +3,18 @@
   "version": "0.1.0",
   "description": "Local-first CLI for turning noisy command logs into concise triage reports.",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/src/index.js",
   "bin": {
-    "logtriage": "./dist/cli.js"
+    "logtriage": "./dist/src/cli.js"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/src/index.js"
   },
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "SECURITY.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -21,7 +22,7 @@
     "test": "npm run build && node --test \"dist/**/*.test.js\"",
     "smoke": "bash scripts/smoke.sh",
     "package:smoke": "npm pack --dry-run",
-    "release:check": "npm test && npm run package:smoke"
+    "release:check": "npm run check && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "cli",
@@ -38,5 +39,13 @@
   "devDependencies": {
     "@types/node": "^25.9.1",
     "typescript": "^6.0.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/logtriage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/logtriage/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/logtriage#readme"
 }
