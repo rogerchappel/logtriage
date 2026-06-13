@@ -10,6 +10,8 @@ format and uses semantic versioning when versioned releases are published.
 ### Added
 
 - Initial project setup.
+- Release-candidate quickstart, log fixture packaging, and package contents
+  notes for npm dry-run review.
 
 ## Release Links
 

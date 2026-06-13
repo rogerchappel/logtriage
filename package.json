@@ -12,6 +12,7 @@
   },
   "files": [
     "dist",
+    "fixtures/failing.log",
     "README.md",
     "LICENSE",
     "SECURITY.md",
