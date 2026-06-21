@@ -13,6 +13,7 @@
   "files": [
     "dist",
     "fixtures/failing.log",
+    "fixtures/ci-failure.log",
     "README.md",
     "LICENSE",
     "SECURITY.md",

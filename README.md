@@ -32,9 +32,19 @@ Expected output shape:
 lines: 4
 errors: 1
 warnings: 1
-exit hints: status 1
-first error: error Command failed with status 1
+exit hints: exited with 2
+first error: Error: command failed
 ```
+
+Run the fixture-backed demo:
+
+```sh
+bash demo/run-fixture-triage.sh
+```
+
+The demo builds the local CLI and summarizes both `fixtures/failing.log` and the
+CI-style `fixtures/ci-failure.log`. A short video or social brief lives in
+[docs/promo/demo-brief.md](docs/promo/demo-brief.md).
 
 After publishing, the global command is:
 
