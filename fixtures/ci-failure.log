@@ -1,0 +1,6 @@
+installing dependencies
+Warning: deprecated config key "legacy-peer-deps"
+running test suite
+FAIL test/parser.test.ts
+Error: expected "ready" to equal "failed"
+process exited with 1
