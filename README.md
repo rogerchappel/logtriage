@@ -80,6 +80,16 @@ should be small, reviewable, and verified before review.
 See [SECURITY.md](SECURITY.md) for vulnerability reporting guidance. Logs can
 contain secrets, tokens, hostnames, and customer data; scrub sensitive input
 before sharing logs or triage output.
+## CLI Help Smoke
+
+Confirm the packaged command starts and prints its help text before relying on a release tarball or downstream automation:
+
+```bash
+npm run build
+node ./dist/src/cli.js --help
+```
+
+The command should exit successfully, print the available options, and avoid reading project files or contacting external services.
 
 ## Verification
 
