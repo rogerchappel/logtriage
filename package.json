@@ -14,6 +14,7 @@
     "dist",
     "fixtures/failing.log",
     "fixtures/ci-failure.log",
+    "fixtures/package-install-failure.log",
     "README.md",
     "LICENSE",
     "SECURITY.md",

@@ -1,0 +1,10 @@
+npm ERR! code ERESOLVE
+npm WARN deprecated legacy-helper@1.2.0: this package is no longer maintained
+npm ERR! ERESOLVE unable to resolve dependency tree
+npm ERR! While resolving: demo-app@0.1.0
+npm ERR! Found: react@19.0.0
+npm ERR! Could not resolve dependency:
+npm ERR! peer react@"^18.0.0" from legacy-widget@2.3.0
+npm ERR! Fix the upstream dependency conflict, or retry this command with --force.
+npm ERR! command failed
+npm ERR! exited with 1
