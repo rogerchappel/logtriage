@@ -42,8 +42,9 @@ Run the fixture-backed demo:
 bash demo/run-fixture-triage.sh
 ```
 
-The demo builds the local CLI and summarizes both `fixtures/failing.log` and the
-CI-style `fixtures/ci-failure.log`. A short video or social brief lives in
+The demo builds the local CLI and summarizes `fixtures/failing.log`, the
+CI-style `fixtures/ci-failure.log`, and the package-install fixture
+`fixtures/package-install-failure.log`. A short video or social brief lives in
 [docs/promo/demo-brief.md](docs/promo/demo-brief.md).
 
 After publishing, the global command is:
@@ -67,8 +68,9 @@ bash scripts/validate.sh
 The npm package allowlist includes the runtime files plus the public support
 documents needed for release review: `README.md`, `LICENSE`, `SECURITY.md`,
 `CHANGELOG.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and the sample
-`fixtures/failing.log`. Run `npm run package:smoke` or `npm pack --dry-run`
-before publishing to confirm those files are still present in the tarball.
+fixtures under `fixtures/`. Run `npm run package:smoke` or
+`npm pack --dry-run` before publishing to confirm those files are still present
+in the tarball.
 
 ## Contributing
 
