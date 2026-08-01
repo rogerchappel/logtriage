@@ -47,9 +47,10 @@ CI-style `fixtures/ci-failure.log`, and the package-install fixture
 `fixtures/package-install-failure.log`. A short video or social brief lives in
 [docs/promo/demo-brief.md](docs/promo/demo-brief.md).
 
-After publishing, the global command is:
+After a release has been published, install and run the global command with:
 
 ```sh
+npm install --global logtriage
 logtriage path/to/command.log
 ```
 
@@ -68,9 +69,9 @@ bash scripts/validate.sh
 The npm package allowlist includes the runtime files plus the public support
 documents needed for release review: `README.md`, `LICENSE`, `SECURITY.md`,
 `CHANGELOG.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and the sample
-fixtures under `fixtures/`. Run `npm run package:smoke` or
-`npm pack --dry-run` before publishing to confirm those files are still present
-in the tarball.
+fixtures under `fixtures/`. Run `npm run package:smoke` before publishing to
+build the tarball, install it into a disposable project, and exercise the
+installed command against both `--help` and a packaged fixture.
 
 ## Contributing
 
@@ -125,4 +126,8 @@ npm run package:smoke
 npm run release:check
 ```
 
-Use `npm run package:smoke` or `npm pack --dry-run` to confirm the published tarball includes the support docs and runnable package contents.
+Pushing a `v*.*.*` tag runs the release workflow. It verifies the package,
+builds one tarball, publishes that exact tarball to npm with provenance, and
+only then creates the GitHub release with the tarball attached. The repository
+must be configured as a trusted publisher for the `logtriage` package on npm;
+the workflow uses GitHub's OIDC identity and does not require an npm token.
