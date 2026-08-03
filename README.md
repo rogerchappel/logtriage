@@ -4,6 +4,10 @@ Turn noisy command logs into a small local triage summary. `logtriage` counts
 error and warning lines, surfaces exit-code hints, and prints the first likely
 failure line so a reviewer can decide where to look next.
 
+Common zero-count summaries such as `0 failed`, `Failures: 0`, `0 errors`, and
+`Warnings: 0` are treated as clean results. Positive counts and other
+diagnostics on the same line are still surfaced.
+
 ## Status
 
 Early MVP. The CLI is usable for plain-text command logs, but parsing is
