@@ -4,6 +4,12 @@ import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { formatSummary, triageLog } from '../src/index.js';
 
+const cli = new URL('../src/cli.js', import.meta.url);
+
+function runCli(args: string[]) {
+  return spawnSync(process.execPath, [cli.pathname, ...args], { encoding: 'utf8' });
+}
+
 test('triages errors, warnings, and exit hints', () => {
   const summary = triageLog('boot\nWarning: deprecated flag\nError: build failed\nprocess exited with 2\n');
 
@@ -55,8 +61,7 @@ test('omits successful exit hints and retains nonzero exits', () => {
 
 test('CLI reports a clean fixture without a first error', () => {
   const fixture = new URL('../../fixtures/clean-summary.log', import.meta.url);
-  const cli = new URL('../src/cli.js', import.meta.url);
-  const result = spawnSync(process.execPath, [cli.pathname, fixture.pathname], { encoding: 'utf8' });
+  const result = runCli([fixture.pathname]);
 
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /^errors: 0$/m);
@@ -68,12 +73,56 @@ test('CLI reports a clean fixture without a first error', () => {
 
 test('CLI retains mixed positive diagnostics and a nonzero exit fixture', () => {
   const fixture = new URL('../../fixtures/negated-mixed.log', import.meta.url);
-  const cli = new URL('../src/cli.js', import.meta.url);
-  const result = spawnSync(process.execPath, [cli.pathname, fixture.pathname], { encoding: 'utf8' });
+  const result = runCli([fixture.pathname]);
 
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /^errors: 1$/m);
   assert.match(result.stdout, /^warnings: 1$/m);
   assert.match(result.stdout, /^exit hints: exited with 3$/m);
   assert.match(result.stdout, /^first error: Completed without errors, but Error: upload failed$/m);
+});
+
+test('CLI requires exactly one log-file operand', () => {
+  const fixture = new URL('../../fixtures/failing.log', import.meta.url);
+  const missing = runCli([]);
+  const surplus = runCli([fixture.pathname, 'extra.log']);
+
+  assert.equal(missing.status, 1);
+  assert.equal(missing.stdout, '');
+  assert.match(missing.stderr, /^error: missing log-file operand\nUsage:/);
+  assert.doesNotMatch(missing.stderr, /\n\s+at /);
+
+  assert.equal(surplus.status, 1);
+  assert.equal(surplus.stdout, '');
+  assert.match(surplus.stderr, /^error: expected exactly one log-file operand; received 2\nUsage:/);
+  assert.doesNotMatch(surplus.stderr, /\n\s+at /);
+});
+
+test('CLI rejects unknown options without treating them as files', () => {
+  const result = runCli(['--bogus']);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, '');
+  assert.match(result.stderr, /^error: unknown option "--bogus"\nUsage:/);
+  assert.doesNotMatch(result.stderr, /ENOENT|node:fs|\n\s+at /);
+});
+
+test('CLI help options succeed without reading a file', () => {
+  for (const option of ['--help', '-h']) {
+    const result = runCli([option]);
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.stderr, '');
+    assert.match(result.stdout, /^Usage: logtriage <log-file>$/m);
+  }
+});
+
+test('CLI reports unreadable files without a Node stack trace', () => {
+  const missingFile = new URL('../../fixtures/does-not-exist.log', import.meta.url);
+  const result = runCli([missingFile.pathname]);
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, '');
+  assert.match(result.stderr, /^error: cannot read ".*does-not-exist\.log": /);
+  assert.doesNotMatch(result.stderr, /node:fs|\n\s+at /);
 });
