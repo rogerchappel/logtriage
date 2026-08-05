@@ -5,8 +5,13 @@ error and warning lines, surfaces exit-code hints, and prints the first likely
 failure line so a reviewer can decide where to look next.
 
 Common zero-count summaries such as `0 failed`, `Failures: 0`, `0 errors`, and
-`Warnings: 0` are treated as clean results. Positive counts and other
-diagnostics on the same line are still surfaced.
+`Warnings: 0` are treated as clean results. Explicitly negated summaries such
+as `No warnings` and `completed without errors` are also ignored. Positive
+counts and other diagnostics on the same line are still surfaced.
+
+Exit hints are failure-oriented: successful `exit code 0`, `exited with 0`,
+and `status: 0` messages are omitted, while nonzero codes remain in the
+summary.
 
 ## Status
 

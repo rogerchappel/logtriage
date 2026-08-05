@@ -31,6 +31,28 @@ test('ignores zero-count diagnostic summaries without hiding positive counts', (
   assert.deepEqual(failing.warningLines, ['Warnings: 2']);
 });
 
+test('ignores negated diagnostics without hiding positive diagnostics on the same line', () => {
+  const clean = triageLog('Everything completed without errors\nNo warnings were emitted\n');
+
+  assert.deepEqual(clean.errorLines, []);
+  assert.deepEqual(clean.warningLines, []);
+
+  const mixed = triageLog(
+    'No warnings during compilation; Warning: deprecated option used\n' +
+      'Completed without errors, but Error: upload failed\n',
+  );
+  assert.deepEqual(mixed.errorLines, ['Completed without errors, but Error: upload failed']);
+  assert.deepEqual(mixed.warningLines, [
+    'No warnings during compilation; Warning: deprecated option used',
+  ]);
+});
+
+test('omits successful exit hints and retains nonzero exits', () => {
+  const summary = triageLog('Process exited with 0\nstatus: 0\nProcess exited with 2\nexit code 17\n');
+
+  assert.deepEqual(summary.exitCodeHints, ['exited with 2', 'exit code 17']);
+});
+
 test('CLI reports a clean fixture without a first error', () => {
   const fixture = new URL('../../fixtures/clean-summary.log', import.meta.url);
   const cli = new URL('../src/cli.js', import.meta.url);
@@ -39,6 +61,19 @@ test('CLI reports a clean fixture without a first error', () => {
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /^errors: 0$/m);
   assert.match(result.stdout, /^warnings: 0$/m);
+  assert.doesNotMatch(result.stdout, /^exit hints:/m);
   assert.doesNotMatch(result.stdout, /^first error:/m);
-  assert.equal(readFileSync(fixture, 'utf8').includes('0 failed'), true);
+  assert.equal(readFileSync(fixture, 'utf8').includes('without errors'), true);
+});
+
+test('CLI retains mixed positive diagnostics and a nonzero exit fixture', () => {
+  const fixture = new URL('../../fixtures/negated-mixed.log', import.meta.url);
+  const cli = new URL('../src/cli.js', import.meta.url);
+  const result = spawnSync(process.execPath, [cli.pathname, fixture.pathname], { encoding: 'utf8' });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /^errors: 1$/m);
+  assert.match(result.stdout, /^warnings: 1$/m);
+  assert.match(result.stdout, /^exit hints: exited with 3$/m);
+  assert.match(result.stdout, /^first error: Completed without errors, but Error: upload failed$/m);
 });
