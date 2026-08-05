@@ -10,9 +10,11 @@ const warningPattern = /\b(warn|warnings?|deprecated)\b/i;
 const exitPattern = /\b(exit code|exited with|status)\s*[:=]?\s*(\d+)/i;
 const zeroErrorPattern = /\b(?:0\s+(?:tests?\s+)?(?:errors?|failed|failures?)|(?:errors?|failures?)\s*[:=]\s*0)\b/gi;
 const zeroWarningPattern = /\b(?:0\s+warnings?|warnings?\s*[:=]\s*0)\b/gi;
+const negatedDiagnosticPattern =
+  /\b(?:no|without)\s+(?:errors?|warnings?)(?:\s*(?:,|and|or)\s*(?:errors?|warnings?))*\b/gi;
 
 function hasPositiveDiagnostic(line: string, pattern: RegExp, zeroPattern: RegExp): boolean {
-  return pattern.test(line.replace(zeroPattern, ''));
+  return pattern.test(line.replace(zeroPattern, '').replace(negatedDiagnosticPattern, ''));
 }
 
 export function triageLog(input: string): TriageSummary {
@@ -21,7 +23,7 @@ export function triageLog(input: string): TriageSummary {
   const warningLines = lines.filter((line) => hasPositiveDiagnostic(line, warningPattern, zeroWarningPattern));
   const exitCodeHints = lines.flatMap((line) => {
     const match = line.match(exitPattern);
-    return match ? [match[0]] : [];
+    return match && Number(match[2]) !== 0 ? [match[0]] : [];
   });
 
   return {
