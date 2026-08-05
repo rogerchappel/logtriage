@@ -63,6 +63,11 @@ npm install --global logtriage
 logtriage path/to/command.log
 ```
 
+The command accepts exactly one log-file path. `--help` and `-h` print usage
+and exit successfully. Missing or extra operands, unknown options, and files
+that cannot be read exit nonzero with a concise error on standard error; they
+do not emit a Node.js stack trace.
+
 ## Verify
 
 Run the local validation script before opening a pull request:
