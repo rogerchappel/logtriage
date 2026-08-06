@@ -7,7 +7,7 @@ export type TriageSummary = {
 
 const errorPattern = /\b(error|failed|failure|exception|fatal)\b/i;
 const warningPattern = /\b(warn|warnings?|deprecated)\b/i;
-const exitPattern = /\b(exit code|exited with|status)\s*[:=]?\s*(\d+)/i;
+const exitPattern = /\b(exit code|exited with|process status)\s*[:=]?\s*(\d+)/i;
 const zeroErrorPattern = /\b(?:0\s+(?:tests?\s+)?(?:errors?|failed|failures?)|(?:errors?|failures?)\s*[:=]\s*0)\b/gi;
 const zeroWarningPattern = /\b(?:0\s+warnings?|warnings?\s*[:=]\s*0)\b/gi;
 const negatedDiagnosticPattern =

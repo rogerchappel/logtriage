@@ -9,9 +9,10 @@ Common zero-count summaries such as `0 failed`, `Failures: 0`, `0 errors`, and
 as `No warnings` and `completed without errors` are also ignored. Positive
 counts and other diagnostics on the same line are still surfaced.
 
-Exit hints are failure-oriented: successful `exit code 0`, `exited with 0`,
-and `status: 0` messages are omitted, while nonzero codes remain in the
-summary.
+Exit hints are failure-oriented: explicit `exit code`, `exited with`, and
+`process status` messages retain nonzero codes and omit zero. Generic status
+messages, including HTTP and API response statuses, are not treated as process
+exit hints.
 
 ## Status
 

@@ -54,9 +54,19 @@ test('ignores negated diagnostics without hiding positive diagnostics on the sam
 });
 
 test('omits successful exit hints and retains nonzero exits', () => {
-  const summary = triageLog('Process exited with 0\nstatus: 0\nProcess exited with 2\nexit code 17\n');
+  const summary = triageLog(
+    'Process exited with 0\nprocess status: 0\nProcess exited with 2\nexit code 17\nprocess status: 9\n',
+  );
 
-  assert.deepEqual(summary.exitCodeHints, ['exited with 2', 'exit code 17']);
+  assert.deepEqual(summary.exitCodeHints, ['exited with 2', 'exit code 17', 'process status: 9']);
+});
+
+test('does not treat HTTP response statuses as process exit hints', () => {
+  const summary = triageLog(
+    'HTTP status 200\nAPI response status: 404\nrequest completed with status=503\n',
+  );
+
+  assert.deepEqual(summary.exitCodeHints, []);
 });
 
 test('CLI reports a clean fixture without a first error', () => {
