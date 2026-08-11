@@ -15,6 +15,7 @@
     "fixtures/failing.log",
     "fixtures/ci-failure.log",
     "fixtures/clean-summary.log",
+    "fixtures/diagnostic-counts.log",
     "fixtures/negated-mixed.log",
     "fixtures/package-install-failure.log",
     "README.md",
