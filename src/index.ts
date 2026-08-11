@@ -5,11 +5,14 @@ export type TriageSummary = {
   exitCodeHints: string[];
 };
 
-const errorPattern = /(?:\bnpm\s+ERR!|\b[A-Za-z][A-Za-z0-9_]*Error\s*:|\b(?:error|failed|failure|exception|fatal)\b)/i;
+const errorPattern =
+  /(?:\bnpm\s+ERR!|\b[A-Za-z][A-Za-z0-9_]*Error\s*:|\b(?:errors?|failures?)(?:\s+count)?\s*[:=]?\s*\(?\s*[1-9]\d*|\b(?:error|failed|failure|exception|fatal)\b)/i;
 const warningPattern = /\b(warn|warnings?|deprecated)\b/i;
 const exitPattern = /\b(exit code|exited with|process status)\s*[:=]?\s*(\d+)/i;
-const zeroErrorPattern = /\b(?:0\s+(?:tests?\s+)?(?:errors?|failed|failures?)|(?:errors?|failures?)\s*[:=]\s*0)\b/gi;
-const zeroWarningPattern = /\b(?:0\s+warnings?|warnings?\s*[:=]\s*0)\b/gi;
+const zeroErrorPattern =
+  /\b(?:0\s+(?:tests?\s+)?(?:errors?|failed|failures?)|(?:errors?|failures?)(?:\s+count)?\s*[:=]?\s*\(?\s*0\s*\)?)/gi;
+const zeroWarningPattern =
+  /\b(?:0\s+warnings?|warnings?(?:\s+count)?\s*[:=]?\s*\(?\s*0\s*\)?)/gi;
 const negatedDiagnosticPattern =
   /\b(?:no|without)\s+(?:errors?|warnings?)(?:\s*(?:,|and|or)\s*(?:errors?|warnings?))*\b/gi;
 
