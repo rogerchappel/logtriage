@@ -37,6 +37,37 @@ test('ignores zero-count diagnostic summaries without hiding positive counts', (
   assert.deepEqual(failing.warningLines, ['Warnings: 2']);
 });
 
+test('recognizes diagnostic count summaries with punctuation and labels', () => {
+  const positive = triageLog('Failures: 2\nFailure count: 3\nError count = (4)\nWarning count: 5\n');
+
+  assert.deepEqual(positive.errorLines, [
+    'Failures: 2',
+    'Failure count: 3',
+    'Error count = (4)',
+  ]);
+  assert.deepEqual(positive.warningLines, ['Warning count: 5']);
+
+  const clean = triageLog('Failures 0\nErrors: (0)\nError count = 0\nWarning count: 0\n');
+  assert.deepEqual(clean.errorLines, []);
+  assert.deepEqual(clean.warningLines, []);
+});
+
+test('zero-count summaries do not hide positive diagnostics later on the same line', () => {
+  const summary = triageLog(
+    'Failures 0; Failures: 2 in retry\n' +
+      'Errors: (0), but Error: cleanup failed\n' +
+      'Warning count: 0; Warning: deprecated retry option\n',
+  );
+
+  assert.deepEqual(summary.errorLines, [
+    'Failures 0; Failures: 2 in retry',
+    'Errors: (0), but Error: cleanup failed',
+  ]);
+  assert.deepEqual(summary.warningLines, [
+    'Warning count: 0; Warning: deprecated retry option',
+  ]);
+});
+
 test('ignores negated diagnostics without hiding positive diagnostics on the same line', () => {
   const clean = triageLog('Everything completed without errors\nNo warnings were emitted\n');
 
@@ -110,6 +141,16 @@ test('CLI retains mixed positive diagnostics and a nonzero exit fixture', () => 
   assert.match(result.stdout, /^warnings: 1$/m);
   assert.match(result.stdout, /^exit hints: exited with 3$/m);
   assert.match(result.stdout, /^first error: Completed without errors, but Error: upload failed$/m);
+});
+
+test('CLI handles zero and positive diagnostic count forms in one fixture', () => {
+  const fixture = new URL('../../fixtures/diagnostic-counts.log', import.meta.url);
+  const result = runCli([fixture.pathname]);
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /^errors: 1$/m);
+  assert.match(result.stdout, /^warnings: 1$/m);
+  assert.match(result.stdout, /^first error: Failures: 2$/m);
 });
 
 test('CLI summarizes the package-install fixture exactly as documented', () => {

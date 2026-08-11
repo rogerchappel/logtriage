@@ -4,10 +4,13 @@ Turn noisy command logs into a small local triage summary. `logtriage` counts
 error and warning lines, surfaces exit-code hints, and prints the first likely
 failure line so a reviewer can decide where to look next.
 
-Common zero-count summaries such as `0 failed`, `Failures: 0`, `0 errors`, and
-`Warnings: 0` are treated as clean results. Explicitly negated summaries such
-as `No warnings` and `completed without errors` are also ignored. Positive
-counts and other diagnostics on the same line are still surfaced.
+Common zero-count summaries such as `0 failed`, `Failures 0`, `Errors: (0)`,
+and `Warning count: 0` are treated as clean results. Count labels, optional
+colons or equals signs, and parenthesized counts are supported; positive forms
+such as `Failures: 2`, `Error count = (3)`, and `Warning count: 1` are surfaced.
+Explicitly negated summaries such as `No warnings` and `completed without
+errors` are also ignored. A zero count does not hide another positive
+diagnostic later on the same line.
 
 Exit hints are failure-oriented: explicit `exit code`, `exited with`, and
 `process status` messages retain nonzero codes and omit zero. Generic status
