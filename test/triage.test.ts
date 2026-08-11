@@ -53,6 +53,26 @@ test('ignores negated diagnostics without hiding positive diagnostics on the sam
   ]);
 });
 
+test('recognizes legacy npm and exception-class diagnostics', () => {
+  const summary = triageLog(
+    'npm ERR! code ELIFECYCLE\nValueError: invalid value\nTypeError: expected a string\n',
+  );
+
+  assert.deepEqual(summary.errorLines, [
+    'npm ERR! code ELIFECYCLE',
+    'ValueError: invalid value',
+    'TypeError: expected a string',
+  ]);
+});
+
+test('preserves false-positive protections for expanded error diagnostics', () => {
+  const summary = triageLog(
+    'npm info completed without errors\nErrors: 0\n0 errors\nerrorHandler: initialized\n',
+  );
+
+  assert.deepEqual(summary.errorLines, []);
+});
+
 test('omits successful exit hints and retains nonzero exits', () => {
   const summary = triageLog(
     'Process exited with 0\nprocess status: 0\nProcess exited with 2\nexit code 17\nprocess status: 9\n',
@@ -90,6 +110,21 @@ test('CLI retains mixed positive diagnostics and a nonzero exit fixture', () => 
   assert.match(result.stdout, /^warnings: 1$/m);
   assert.match(result.stdout, /^exit hints: exited with 3$/m);
   assert.match(result.stdout, /^first error: Completed without errors, but Error: upload failed$/m);
+});
+
+test('CLI summarizes the package-install fixture exactly as documented', () => {
+  const fixture = new URL('../../fixtures/package-install-failure.log', import.meta.url);
+  const result = runCli([fixture.pathname]);
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(
+    result.stdout,
+    'lines: 10\n' +
+      'errors: 9\n' +
+      'warnings: 1\n' +
+      'exit hints: exited with 1\n' +
+      'first error: npm ERR! code ERESOLVE\n',
+  );
 });
 
 test('CLI requires exactly one log-file operand', () => {

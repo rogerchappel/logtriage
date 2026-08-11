@@ -15,7 +15,7 @@ Expected summary shape:
 
 ```text
 lines: 10
-errors: 8
+errors: 9
 warnings: 1
 exit hints: exited with 1
 first error: npm ERR! code ERESOLVE
