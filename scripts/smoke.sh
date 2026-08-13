@@ -4,6 +4,10 @@ npm run build
 node dist/src/cli.js fixtures/failing.log | grep 'errors: 1'
 node dist/src/cli.js fixtures/failing.log | grep 'warnings: 1'
 node dist/src/cli.js fixtures/ci-failure.log | grep 'exit hints: exited with 1'
+colored_summary=$(node dist/src/cli.js fixtures/colored-diagnostics.log)
+grep 'errors: 2' <<<"$colored_summary"
+grep 'warnings: 1' <<<"$colored_summary"
+grep 'exit hints: exited with 1' <<<"$colored_summary"
 clean_summary=$(node dist/src/cli.js fixtures/clean-summary.log)
 grep 'errors: 0' <<<"$clean_summary"
 grep 'warnings: 0' <<<"$clean_summary"

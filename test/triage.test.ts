@@ -96,6 +96,30 @@ test('recognizes legacy npm and exception-class diagnostics', () => {
   ]);
 });
 
+test('matches ANSI-colored diagnostics while preserving their source lines', () => {
+  const npmError = '\u001b[31mnpm\u001b[0m \u001b[31mERR!\u001b[0m code ERESOLVE';
+  const failureCount = 'Failures: \u001b[31m2\u001b[0m';
+  const warning = '\u001b[33mWarning:\u001b[0m deprecated option';
+  const summary = triageLog(`${npmError}\n${failureCount}\n${warning}\n`);
+
+  assert.deepEqual(summary.errorLines, [npmError, failureCount]);
+  assert.deepEqual(summary.warningLines, [warning]);
+  assert.equal(formatSummary(summary).includes(`first error: ${npmError}\n`), true);
+});
+
+test('ignores ANSI-colored zero counts and successful exit hints', () => {
+  const summary = triageLog(
+    'Failures: \u001b[32m0\u001b[0m\n' +
+      '\u001b[32mWarnings: 0\u001b[0m\n' +
+      'Process exited with \u001b[32m0\u001b[0m\n' +
+      'Process exited with \u001b[31m2\u001b[0m\n',
+  );
+
+  assert.deepEqual(summary.errorLines, []);
+  assert.deepEqual(summary.warningLines, []);
+  assert.deepEqual(summary.exitCodeHints, ['exited with 2']);
+});
+
 test('preserves false-positive protections for expanded error diagnostics', () => {
   const summary = triageLog(
     'npm info completed without errors\nErrors: 0\n0 errors\nerrorHandler: initialized\n',
@@ -151,6 +175,17 @@ test('CLI handles zero and positive diagnostic count forms in one fixture', () =
   assert.match(result.stdout, /^errors: 1$/m);
   assert.match(result.stdout, /^warnings: 1$/m);
   assert.match(result.stdout, /^first error: Failures: 2$/m);
+});
+
+test('CLI handles mixed colored and plain diagnostics in one fixture', () => {
+  const fixture = new URL('../../fixtures/colored-diagnostics.log', import.meta.url);
+  const source = readFileSync(fixture, 'utf8');
+  const result = runCli([fixture.pathname]);
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.stdout, 'lines: 7\nerrors: 2\nwarnings: 1\nexit hints: exited with 1\n' +
+    `first error: [31mnpm[0m [31mERR![0m code ERESOLVE\n`);
+  assert.equal(source.includes('[31m'), true);
 });
 
 test('CLI summarizes the package-install fixture exactly as documented', () => {

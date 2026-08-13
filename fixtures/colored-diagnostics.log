@@ -1,0 +1,7 @@
+installing dependencies
+[31mnpm[0m [31mERR![0m code ERESOLVE
+Failures: [32m0[0m
+Failures: [31m2[0m
+[33mWarning:[0m deprecated peer dependency
+Process exited with [32m0[0m
+Process exited with [31m1[0m

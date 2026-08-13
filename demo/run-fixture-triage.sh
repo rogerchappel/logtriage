@@ -17,3 +17,7 @@ node dist/src/cli.js fixtures/ci-failure.log
 echo
 echo "Package install fixture:"
 node dist/src/cli.js fixtures/package-install-failure.log
+
+echo
+echo "Colored terminal fixture:"
+node dist/src/cli.js fixtures/colored-diagnostics.log

@@ -13,6 +13,11 @@ format and uses semantic versioning when versioned releases are published.
 - Release-candidate quickstart, log fixture packaging, and package contents
   notes for npm dry-run review.
 
+### Fixed
+
+- Recognize diagnostics and exit hints in ANSI-colored terminal logs while
+  preserving original source lines in summaries.
+
 ## Release Links
 
 - Unreleased:
