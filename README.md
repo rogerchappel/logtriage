@@ -4,6 +4,10 @@ Turn noisy command logs into a small local triage summary. `logtriage` counts
 error and warning lines, surfaces exit-code hints, and prints the first likely
 failure line so a reviewer can decide where to look next.
 
+ANSI-colored terminal logs are supported. Matching ignores terminal control
+sequences, while reported error and warning lines retain their original color
+codes for display in a compatible terminal.
+
 Common zero-count summaries such as `0 failed`, `Failures 0`, `Errors: (0)`,
 and `Warning count: 0` are treated as clean results. Count labels, optional
 colons or equals signs, and parenthesized counts are supported; positive forms
@@ -56,8 +60,9 @@ bash demo/run-fixture-triage.sh
 ```
 
 The demo builds the local CLI and summarizes `fixtures/failing.log`, the
-CI-style `fixtures/ci-failure.log`, and the package-install fixture
-`fixtures/package-install-failure.log`. A short video or social brief lives in
+CI-style `fixtures/ci-failure.log`, the package-install fixture
+`fixtures/package-install-failure.log`, and the mixed colored/plain terminal
+fixture `fixtures/colored-diagnostics.log`. A short video or social brief lives in
 [docs/promo/demo-brief.md](docs/promo/demo-brief.md).
 
 After a release has been published, install and run the global command with:
