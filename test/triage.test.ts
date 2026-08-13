@@ -96,6 +96,30 @@ test('recognizes legacy npm and exception-class diagnostics', () => {
   ]);
 });
 
+test('matches ANSI-colored diagnostics while preserving their source lines', () => {
+  const npmError = '\u001b[31mnpm\u001b[0m \u001b[31mERR!\u001b[0m code ERESOLVE';
+  const failureCount = 'Failures: \u001b[31m2\u001b[0m';
+  const warning = '\u001b[33mWarning:\u001b[0m deprecated option';
+  const summary = triageLog(`${npmError}\n${failureCount}\n${warning}\n`);
+
+  assert.deepEqual(summary.errorLines, [npmError, failureCount]);
+  assert.deepEqual(summary.warningLines, [warning]);
+  assert.equal(formatSummary(summary).includes(`first error: ${npmError}\n`), true);
+});
+
+test('ignores ANSI-colored zero counts and successful exit hints', () => {
+  const summary = triageLog(
+    'Failures: \u001b[32m0\u001b[0m\n' +
+      '\u001b[32mWarnings: 0\u001b[0m\n' +
+      'Process exited with \u001b[32m0\u001b[0m\n' +
+      'Process exited with \u001b[31m2\u001b[0m\n',
+  );
+
+  assert.deepEqual(summary.errorLines, []);
+  assert.deepEqual(summary.warningLines, []);
+  assert.deepEqual(summary.exitCodeHints, ['exited with 2']);
+});
+
 test('preserves false-positive protections for expanded error diagnostics', () => {
   const summary = triageLog(
     'npm info completed without errors\nErrors: 0\n0 errors\nerrorHandler: initialized\n',
