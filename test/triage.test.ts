@@ -177,6 +177,17 @@ test('CLI handles zero and positive diagnostic count forms in one fixture', () =
   assert.match(result.stdout, /^first error: Failures: 2$/m);
 });
 
+test('CLI handles mixed colored and plain diagnostics in one fixture', () => {
+  const fixture = new URL('../../fixtures/colored-diagnostics.log', import.meta.url);
+  const source = readFileSync(fixture, 'utf8');
+  const result = runCli([fixture.pathname]);
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.stdout, 'lines: 7\nerrors: 2\nwarnings: 1\nexit hints: exited with 1\n' +
+    `first error: [31mnpm[0m [31mERR![0m code ERESOLVE\n`);
+  assert.equal(source.includes('[31m'), true);
+});
+
 test('CLI summarizes the package-install fixture exactly as documented', () => {
   const fixture = new URL('../../fixtures/package-install-failure.log', import.meta.url);
   const result = runCli([fixture.pathname]);
