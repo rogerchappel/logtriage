@@ -89,8 +89,9 @@ bash scripts/validate.sh
 
 ## Package contents
 
-The npm package allowlist includes the runtime files plus the public support
-documents needed for release review: `README.md`, `LICENSE`, `SECURITY.md`,
+The npm package allowlist includes the runtime files and public support
+documents needed for release review, but not compiled tests: `README.md`,
+`LICENSE`, `SECURITY.md`,
 `CHANGELOG.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and the sample
 fixtures under `fixtures/`. Run `npm run package:smoke` before publishing to
 build the tarball, install it into a disposable project, and exercise the
