@@ -11,7 +11,7 @@
     ".": "./dist/src/index.js"
   },
   "files": [
-    "dist",
+    "dist/src",
     "fixtures/failing.log",
     "fixtures/ci-failure.log",
     "fixtures/clean-summary.log",
@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "npm run build && node --test \"dist/**/*.test.js\"",
+    "test": "npm run build && tsc -p tsconfig.test.json && node --test \".test-dist/test/**/*.test.js\"",
     "smoke": "bash scripts/smoke.sh",
     "package:smoke": "bash scripts/package-smoke.sh",
     "release:check": "npm run check && npm test && npm run smoke && npm run package:smoke",
