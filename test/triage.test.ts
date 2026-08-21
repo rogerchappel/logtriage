@@ -19,6 +19,16 @@ test('triages errors, warnings, and exit hints', () => {
   assert.deepEqual(summary.exitCodeHints, ['exited with 2']);
 });
 
+test('treats carriage returns as record boundaries without double-splitting CRLF', () => {
+  const summary = triageLog('boot\rError: failed\rWarning: old\rprocess exited with 2\r');
+
+  assert.equal(summary.totalLines, 4);
+  assert.deepEqual(summary.errorLines, ['Error: failed']);
+  assert.deepEqual(summary.warningLines, ['Warning: old']);
+  assert.deepEqual(summary.exitCodeHints, ['exited with 2']);
+  assert.match(formatSummary(summary), /^first error: Error: failed$/m);
+});
+
 test('formats a compact summary', () => {
   assert.match(formatSummary(triageLog('ok\nfatal: no config\n')), /first error: fatal: no config/);
 });
