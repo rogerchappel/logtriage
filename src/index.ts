@@ -27,7 +27,7 @@ function hasPositiveDiagnostic(line: string, pattern: RegExp, zeroPattern: RegEx
 }
 
 export function triageLog(input: string): TriageSummary {
-  const lines = input.split(/\r?\n/).filter((line) => line.length > 0);
+  const lines = input.split(/\r\n?|\n/).filter((line) => line.length > 0);
   const normalizedLines = lines.map((source) => ({ source, matchable: stripAnsi(source) }));
   const errorLines = normalizedLines
     .filter(({ matchable }) => hasPositiveDiagnostic(matchable, errorPattern, zeroErrorPattern))
