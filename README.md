@@ -26,6 +26,10 @@ exit hints.
 Early MVP. The CLI is usable for plain-text command logs, but parsing is
 heuristic and intentionally conservative.
 
+Log records may be separated by LF, CRLF, or CR. Supporting CR-only records
+keeps terminal captures that use carriage returns from collapsing into one
+summary line.
+
 ## Install from a checkout
 
 ```sh
