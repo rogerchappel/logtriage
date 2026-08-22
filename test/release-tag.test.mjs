@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 const checker = new URL('../scripts/check-release-tag.mjs', import.meta.url);
 const packageJson = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const expectedTag = `v${packageJson.version}`;
+const escapedExpectedTag = expectedTag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 function run(tag, env = {}) {
   const args = [checker.pathname];
@@ -31,7 +32,7 @@ test('accepts the package version tag from GITHUB_REF_NAME', () => {
 test('rejects a tag that does not match the package version', () => {
   const result = run('v999.0.0');
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /expected v0\.1\.0, received v999\.0\.0/);
+  assert.match(result.stderr, new RegExp(`expected ${escapedExpectedTag}, received v999\\.0\\.0`));
 });
 
 test('rejects a missing tag', () => {
