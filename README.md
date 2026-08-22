@@ -159,3 +159,13 @@ builds one tarball, publishes that exact tarball to npm with provenance, and
 only then creates the GitHub release with the tarball attached. The repository
 must be configured as a trusted publisher for the `logtriage` package on npm;
 the workflow uses GitHub's OIDC identity and does not require an npm token.
+
+The tag must exactly equal `v${package.json.version}`: package version `0.1.0`
+requires tag `v0.1.0`. The workflow checks this before packing or publishing.
+Verify a prospective tag locally with:
+
+```bash
+npm run release:tag-check -- v0.1.0
+```
+
+In GitHub Actions, the command reads the tag from `GITHUB_REF_NAME`.

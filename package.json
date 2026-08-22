@@ -32,7 +32,9 @@
     "test": "npm run build && tsc -p tsconfig.test.json && node --test \".test-dist/test/**/*.test.js\"",
     "smoke": "bash scripts/smoke.sh",
     "package:smoke": "bash scripts/package-smoke.sh",
-    "release:check": "npm run check && npm test && npm run smoke && npm run package:smoke",
+    "test:release-tag": "node --test test/release-tag.test.mjs",
+    "release:tag-check": "node scripts/check-release-tag.mjs",
+    "release:check": "npm run check && npm test && npm run test:release-tag && npm run smoke && npm run package:smoke",
     "prepack": "npm run build"
   },
   "keywords": [
