@@ -37,6 +37,8 @@ jobs:
         run: node /tmp/releasebox/bin/releasebox.js check .
       - name: Run release checks
         run: npm run release:check
+      - name: Verify release tag matches package version
+        run: npm run release:tag-check
       - name: Build package
         run: npm pack
       - name: Publish package to npm
