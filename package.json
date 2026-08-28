@@ -17,6 +17,7 @@
     "fixtures/clean-summary.log",
     "fixtures/colored-diagnostics.log",
     "fixtures/diagnostic-counts.log",
+    "fixtures/exited-with-code.log",
     "fixtures/negated-mixed.log",
     "fixtures/package-install-failure.log",
     "README.md",

@@ -146,6 +146,12 @@ test('omits successful exit hints and retains nonzero exits', () => {
   assert.deepEqual(summary.exitCodeHints, ['exited with 2', 'exit code 17', 'process status: 9']);
 });
 
+test('recognizes exited-with-code hints while omitting successful exits', () => {
+  const summary = triageLog('Process exited with code 7\nProcess exited with code 0\n');
+
+  assert.deepEqual(summary.exitCodeHints, ['exited with code 7']);
+});
+
 test('does not treat HTTP response statuses as process exit hints', () => {
   const summary = triageLog(
     'HTTP status 200\nAPI response status: 404\nrequest completed with status=503\n',
@@ -175,6 +181,14 @@ test('CLI retains mixed positive diagnostics and a nonzero exit fixture', () => 
   assert.match(result.stdout, /^warnings: 1$/m);
   assert.match(result.stdout, /^exit hints: exited with 3$/m);
   assert.match(result.stdout, /^first error: Completed without errors, but Error: upload failed$/m);
+});
+
+test('CLI reports only the nonzero exited-with-code fixture hint', () => {
+  const fixture = new URL('../../fixtures/exited-with-code.log', import.meta.url);
+  const result = runCli([fixture.pathname]);
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.stdout, 'lines: 2\nerrors: 0\nwarnings: 0\nexit hints: exited with code 7\n');
 });
 
 test('CLI handles zero and positive diagnostic count forms in one fixture', () => {
