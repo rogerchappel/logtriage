@@ -14,6 +14,9 @@ jobs:
   repository-hygiene:
     name: Repository hygiene
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
 
     steps:
       - name: Check out repository
@@ -47,6 +50,11 @@ jobs:
             echo "No markdown files found."
             exit 1
           fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Run release readiness checks
         run: |
